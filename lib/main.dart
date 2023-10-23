@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:workout_app/icons/my_flutter_app_icons.dart';
-import 'package:workout_app/pages/calendarpage.dart';
-import 'package:workout_app/pages/workoutpage.dart';
+import 'package:workout_app/pages/calendar_page.dart';
+import 'package:workout_app/pages/workout_page.dart';
 
 void main() {
   runApp(const MyApp());

@@ -1,5 +1,6 @@
 import 'package:workout_app/icons/my_flutter_app_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:workout_app/pages/exercise_list_page.dart';
 
 class WorkoutSelectionPage extends StatefulWidget {
   const WorkoutSelectionPage({super.key});
@@ -30,16 +31,13 @@ class _WorkoutSelectionPageState extends State<WorkoutSelectionPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             WorkoutBox(
-              workoutIcon: WorkoutIcons.push,
-              description: 'Push',
+              workoutType: WorkoutType.push,
             ),
             WorkoutBox(
-              workoutIcon: WorkoutIcons.pull,
-              description: 'Pull',
+              workoutType: WorkoutType.pull,
             ),
             WorkoutBox(
-              workoutIcon: WorkoutIcons.legs,
-              description: 'Legs',
+              workoutType: WorkoutType.legs,
             ),
           ],
         ),
@@ -134,30 +132,51 @@ class _WorkoutSelectionPageState extends State<WorkoutSelectionPage> {
 }
 
 class WorkoutBox extends StatelessWidget {
-  final IconData workoutIcon;
-  final String description;
+  final WorkoutType workoutType;
 
-  const WorkoutBox(
-      {super.key, required this.workoutIcon, required this.description});
+  const WorkoutBox({super.key, required this.workoutType});
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: MediaQuery.of(context).size.width * 0.3,
-      height: MediaQuery.of(context).size.width * 0.3,
-      child: Card(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        child: Column(
-          children: [
-            Icon(
-              workoutIcon,
-              size: MediaQuery.of(context).size.width * 0.2,
-              color: Theme.of(context).iconTheme.color,
-            ),
-            Text(description),
-          ],
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const ExerciseList()),
+        );
+      },
+      child: SizedBox(
+        width: MediaQuery.of(context).size.width * 0.3,
+        height: MediaQuery.of(context).size.width * 0.3,
+        child: Card(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          child: Column(
+            children: [
+              Icon(
+                workoutType.icon,
+                size: MediaQuery.of(context).size.width * 0.2,
+                color: Theme.of(context).iconTheme.color,
+              ),
+              Text(workoutType.niceName),
+            ],
+          ),
         ),
       ),
     );
   }
+}
+
+enum WorkoutType {
+  push(icon: WorkoutIcons.push, niceName: "Push"),
+  pull(icon: WorkoutIcons.pull, niceName: "Pull"),
+  legs(icon: WorkoutIcons.legs, niceName: "Legs");
+
+  const WorkoutType({
+    required this.icon,
+    required this.niceName,
+  });
+
+  final IconData icon;
+  final String niceName;
 }
