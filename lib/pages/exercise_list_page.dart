@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:workout_app/main.dart';
-import 'package:workout_app/pages/workout_page.dart';
+
+import '../bloc/exercises_cubit.dart';
+import '../model/exercise_model.dart';
 
 class ExerciseList extends StatelessWidget {
   ExerciseList({super.key, required this.workoutType});
@@ -148,26 +149,4 @@ class _ExerciseCardState extends State<ExerciseCard> {
       ),
     );
   }
-}
-
-class ExerciseSetGroup {
-  final List<ExerciseSet> sets;
-  final Exercise exercise;
-
-  void addSet(ExerciseSet set) {
-    sets.add(set);
-  }
-
-  Exercise get getExercise {
-    return exercise;
-  }
-
-  ExerciseSetGroup(this.sets, this.exercise);
-}
-
-class ExerciseSet {
-  int reps;
-  int weight;
-
-  ExerciseSet({required this.reps, required this.weight});
 }

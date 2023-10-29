@@ -2,41 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-import '../main.dart';
-import 'exercise_list_page.dart';
+import '../bloc/exercises_cubit.dart';
+import '../model/exercise_model.dart';
+import '../util/workout_util.dart';
 
-//
-// class CalendarPage extends StatefulWidget {
-//   const CalendarPage({super.key});
-//
-//   @override
-//   State<CalendarPage> createState() => _CalendarPageState();
-// }
-//
-// class _CalendarPageState extends State<CalendarPage> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return BlocBuilder<WorkoutCubit, Map<DateTime, List<ExerciseSetGroup>>>(
-//         builder: (context, sets) {
-//       return TableCalendar(
-//         firstDay: DateTime.utc(2010, 10, 16),
-//         lastDay: DateTime.utc(2030, 3, 14),
-//         focusedDay: DateTime.now(),
-//         eventLoader: (day) {
-//           if (!context.read<WorkoutCubit>().contains(day)) {
-//             return [];
-//           }
-//           return context
-//               .read<WorkoutCubit>()
-//               .get(day)
-//               .map((e) => e.getExercise.name)
-//               .toList();
-//         },
-//       );
-//     });
-//   }
-// }
-//
 class CalendarPage extends StatefulWidget {
   const CalendarPage({super.key});
 
@@ -143,7 +112,58 @@ class _CalendarPageState extends State<CalendarPage> {
                               children: [
                                 Text(_getEventsForDay(_focusedDay)[index]
                                     .getExercise
-                                    .name)
+                                    .name),
+                                const Divider(),
+                                DataTable(
+                                  columns: const <DataColumn>[
+                                    DataColumn(
+                                      label: Expanded(
+                                        child: Text(
+                                          'Set',
+                                          style: TextStyle(
+                                              fontStyle: FontStyle.italic),
+                                        ),
+                                      ),
+                                    ),
+                                    DataColumn(
+                                      label: Expanded(
+                                        child: Text(
+                                          'Reps',
+                                          style: TextStyle(
+                                              fontStyle: FontStyle.italic),
+                                        ),
+                                      ),
+                                    ),
+                                    DataColumn(
+                                      label: Expanded(
+                                        child: Text(
+                                          'Weight',
+                                          style: TextStyle(
+                                              fontStyle: FontStyle.italic),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                  rows: List<DataRow>.generate(
+                                    _getEventsForDay(_focusedDay)[index]
+                                        .sets
+                                        .length,
+                                    (tableIndex) => DataRow(cells: <DataCell>[
+                                      DataCell(
+                                          Text((tableIndex + 1).toString())),
+                                      DataCell(Text(
+                                          _getEventsForDay(_focusedDay)[index]
+                                              .sets[tableIndex]
+                                              .reps
+                                              .toString())),
+                                      DataCell(Text(
+                                          _getEventsForDay(_focusedDay)[index]
+                                              .sets[tableIndex]
+                                              .weight
+                                              .toString())),
+                                    ]),
+                                  ),
+                                ),
                               ],
                             )));
                   },
@@ -156,7 +176,3 @@ class _CalendarPageState extends State<CalendarPage> {
     );
   }
 }
-
-final kToday = normalizeDate(DateTime.now());
-final kFirstDay = DateTime(kToday.year, kToday.month - 3, kToday.day);
-final kLastDay = DateTime(kToday.year, kToday.month + 3, kToday.day);
