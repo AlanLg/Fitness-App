@@ -1,7 +1,12 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:table_calendar/table_calendar.dart';
 import 'package:workout_app/icons/my_flutter_app_icons.dart';
 import 'package:workout_app/pages/calendar_page.dart';
+import 'package:workout_app/pages/exercise_list_page.dart';
 import 'package:workout_app/pages/workout_page.dart';
 
 void main() {
@@ -18,14 +23,16 @@ class MyApp extends StatelessWidget {
       DeviceOrientation.portraitDown,
     ]);
 
-    return MaterialApp(
-      title: 'Fitness App',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        brightness: Brightness.dark,
-        useMaterial3: true,
-      ),
-      home: const MyHomePage(title: 'My Fitness App'),
+    return BlocProvider(
+      create: (context) => WorkoutCubit(),
+      child: MaterialApp(
+          title: 'Fitness App',
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            brightness: Brightness.dark,
+            useMaterial3: true,
+          ),
+          home: const MyHomePage(title: 'My Fitness App')),
     );
   }
 }
@@ -39,7 +46,13 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  Widget bodyWidget = const WorkoutSelectionPage();
+  int _currentIndex = 1;
+  final List<Widget> _children = [
+    const CalendarPage(),
+    const WorkoutSelectionPage(),
+    const WorkoutSelectionPage(),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,19 +64,9 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         onTap: (index) {
-          switch (index) {
-            case 0:
-              setState(() {
-                bodyWidget = const CalendarPage();
-              });
-              break;
-            case 1:
-            case 2:
-              setState(() {
-                bodyWidget = const WorkoutSelectionPage();
-              });
-              break;
-          }
+          setState(() {
+            _currentIndex = index;
+          });
         },
         items: const [
           BottomNavigationBarItem(
@@ -73,7 +76,38 @@ class _MyHomePageState extends State<MyHomePage> {
           BottomNavigationBarItem(icon: Icon(Icons.person), label: "profile"),
         ],
       ),
-      body: bodyWidget,
+      body: _children[_currentIndex],
     );
   }
+}
+
+class WorkoutCubit extends Cubit<Map<DateTime, List<ExerciseSetGroup>>> {
+  WorkoutCubit()
+      : super(LinkedHashMap(
+          equals: isSameDay,
+          hashCode: getHashCode,
+        ));
+
+  static get getHashCode => null;
+
+  Iterable<DateTime> getAll() {
+    return state.keys;
+  }
+
+  List<ExerciseSetGroup> get(DateTime dateTime) {
+    return state[dateTime] ?? [];
+  }
+
+  bool contains(DateTime dateTime) {
+    return state.containsKey(dateTime);
+  }
+
+  void add(List<ExerciseSetGroup> exercises) {
+    state.putIfAbsent(normalizeDate(DateTime.now()), () => exercises);
+    emit(state);
+  }
+}
+
+int getHashCode(DateTime key) {
+  return key.day * 1000000 + key.month * 10000 + key.year;
 }
