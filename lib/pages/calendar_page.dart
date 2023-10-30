@@ -15,8 +15,7 @@ class CalendarPage extends StatefulWidget {
 
 class _CalendarPageState extends State<CalendarPage> {
   CalendarFormat _calendarFormat = CalendarFormat.month;
-  RangeSelectionMode _rangeSelectionMode = RangeSelectionMode
-      .toggledOff; // Can be toggled on/off by longpressing a date
+  RangeSelectionMode _rangeSelectionMode = RangeSelectionMode.toggledOff;
   DateTime _focusedDay = normalizeDate(DateTime.now());
   DateTime? _selectedDay;
 
@@ -33,7 +32,6 @@ class _CalendarPageState extends State<CalendarPage> {
   }
 
   List<ExerciseSetGroup> _getEventsForDay(DateTime day) {
-    // Implementation example
     return context.read<WorkoutCubit>().get(day);
   }
 
@@ -70,7 +68,6 @@ class _CalendarPageState extends State<CalendarPage> {
             eventLoader: _getEventsForDay,
             startingDayOfWeek: StartingDayOfWeek.monday,
             calendarStyle: const CalendarStyle(
-              // Use `CalendarStyle` to customize the UI
               outsideDaysVisible: false,
             ),
             onDaySelected: _onDaySelected,

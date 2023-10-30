@@ -24,6 +24,12 @@ class ExerciseSet {
   ExerciseSet({required this.reps, required this.weight});
 }
 
+class Exercise {
+  final String name;
+
+  const Exercise(this.name);
+}
+
 enum WorkoutType {
   push(
     icon: WorkoutIcons.push,
@@ -66,10 +72,4 @@ enum WorkoutType {
   final IconData icon;
   final String niceName;
   final List<Exercise> exercises;
-}
-
-class Exercise {
-  final String name;
-
-  const Exercise(this.name);
 }

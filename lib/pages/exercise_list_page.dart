@@ -40,7 +40,7 @@ class ExerciseList extends StatelessWidget {
         body: ListView(children: [
           for (ExerciseSetGroup exercise in exerciseSets)
             ExerciseCard(
-              set: exercise,
+              exerciseSetGroup: exercise,
             )
         ]),
       );
@@ -49,9 +49,9 @@ class ExerciseList extends StatelessWidget {
 }
 
 class ExerciseCard extends StatefulWidget {
-  const ExerciseCard({super.key, required this.set});
+  const ExerciseCard({super.key, required this.exerciseSetGroup});
 
-  final ExerciseSetGroup set;
+  final ExerciseSetGroup exerciseSetGroup;
 
   @override
   State<ExerciseCard> createState() => _ExerciseCardState();
@@ -73,7 +73,7 @@ class _ExerciseCardState extends State<ExerciseCard> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    widget.set.getExercise.name,
+                    widget.exerciseSetGroup.getExercise.name,
                     style: const TextStyle(
                       fontSize: 20,
                     ),
@@ -109,7 +109,7 @@ class _ExerciseCardState extends State<ExerciseCard> {
                   ),
                 ],
                 rows: List<DataRow>.generate(
-                  widget.set.sets.length,
+                  widget.exerciseSetGroup.sets.length,
                   (index) => DataRow(cells: <DataCell>[
                     DataCell(Text((index + 1).toString())),
                     DataCell(TextField(
@@ -117,7 +117,8 @@ class _ExerciseCardState extends State<ExerciseCard> {
                       keyboardType: TextInputType.number,
                       onChanged: (text) {
                         setState(() {
-                          widget.set.sets[index].reps = int.parse(text);
+                          widget.exerciseSetGroup.sets[index].reps =
+                              int.parse(text);
                         });
                       },
                     )),
@@ -126,7 +127,8 @@ class _ExerciseCardState extends State<ExerciseCard> {
                       keyboardType: TextInputType.number,
                       onChanged: (text) {
                         setState(() {
-                          widget.set.sets[index].weight = int.parse(text);
+                          widget.exerciseSetGroup.sets[index].weight =
+                              int.parse(text);
                         });
                       },
                     )),
@@ -139,7 +141,8 @@ class _ExerciseCardState extends State<ExerciseCard> {
               ElevatedButton(
                   onPressed: () {
                     setState(() {
-                      widget.set.addSet(ExerciseSet(reps: 0, weight: 0));
+                      widget.exerciseSetGroup
+                          .addSet(ExerciseSet(reps: 0, weight: 0));
                     });
                   },
                   child: const Text("+ Add Set"))
